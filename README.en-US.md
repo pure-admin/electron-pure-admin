@@ -1,47 +1,26 @@
-<h1>vue-pure-admin Lite Edition（no i18n version）</h1>
+<h1>electron-pure-admin</h1>
 
-[![license](https://img.shields.io/github/license/xiaoxian521/vue-pure-admin.svg)](LICENSE)
+**Chinese** | [English](./README.en-US.md)
 
-**English** | [中文](./README.md)
+- [electron-pure-admin](https://github.com/xiaoxian521/electron-pure-admin) is in [pure-admin-thin](https://github.com/xiaoxian521/pure-admin-thin) developed on the basis of
+- Of course, the platform also provides the `tauri` version of [tauri-pure-admin](https://github.com/xiaoxian521/tauri-pure-admin)
 
-## introduce
+### Install dependencies
 
-The Lite version is based on the shelf extracted from [vue-pure-admin](https://github.com/xiaoxian521/vue-pure-admin), including the main functions, which is more suitable for actual project development, and the packaged size is lower than ` 3MB`, and will permanently sync the full version of the code. After enabling `brotli` compression and `cdn` to replace the native library mode, the package size is less than `500kb`
+- `yarn install`
 
-## Supporting Video
+### Start up
 
-- [Click Watch Tutorial](https://www.bilibili.com/video/BV1534y1S7HV)
-- [Click Watch UI Design](https://www.bilibili.com/video/BV17g411T7rq)
+- `yarn dev`
 
-## Docs
+### Build
 
-- [Click me to view the domestic documentation site](https://yiming_chang.gitee.io/pure-admin-doc)
-- [Click me to view foreign document site](https://xiaoxian521.github.io/pure-admin-doc)
+- `yarn build`
 
-## Usage
+`yarn` is more friendly to `electron` support
 
-### Installation dependencies
+### How to build `pure-admin` full version or other version into `electron` version, just refer to the following two steps
 
-pnpm install
+1. [Replace pnpm with yarn, yarn is more friendly to electron support](https://github.com/xiaoxian521/electron-pure-admin/commit/1a036a270cc5792ff6f12070dbf3ac92b8138268)
 
-### Install a package
-
-pnpm add packageName
-
-### Uninstall a package
-
-pnpm remove packageName
-
-I think you should fork the project first to develop, so that you can pull the update synchronously when I update! ! !
-
-## Supporting video tutorial
-
-bilibili: https://www.bilibili.com/video/BV1534y1S7HV/
-
-## ⚠️ Attention
-
-- The Lite version does not accept any issues and prs. If you have any questions, please go to the full version https://github.com/xiaoxian521/vue-pure-admin/issues/new/choose to mention, thank you! ! !
-
-## License
-
-In principle, no fees and copyrights are charged, and you can use it with confidence, but if you need secondary open source, please contact the author for permission!
+2. [Add electron support](https://github.com/xiaoxian521/electron-pure-admin/commit/12fbf65ff95757ce444769ac6c3e65265595973d)
