@@ -1,0 +1,26 @@
+@import "./mixin.scss";
+@import "./transition.scss";
+@import "./element-plus.scss";
+@import "./sidebar.scss";
+@import "./dark.scss";
+@import "./tailwind.css";
+
+/* 自定义全局 CssVar */
+:root {
+  --pure-transition-duration: 0.016s;
+}
+
+/* 灰色模式 */
+.html-grey {
+  filter: grayscale(100%);
+}
+
+/* 色弱模式 */
+.html-weakness {
+  filter: invert(80%);
+}
+
+/* 重置 vxe-table 中 pager 样式 */
+.vxe-pager .vxe-pager--num-btn:not(.is--disabled).is--active {
+  color: #fff !important;
+}
