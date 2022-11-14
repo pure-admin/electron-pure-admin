@@ -4,6 +4,7 @@ import { viteBuildInfo } from "./info";
 import svgLoader from "vite-svg-loader";
 import legacy from "@vitejs/plugin-legacy";
 import vueJsx from "@vitejs/plugin-vue-jsx";
+import { electronPlugin } from "./electron";
 import VueMacros from "unplugin-vue-macros/vite";
 import { viteMockServe } from "vite-plugin-mock";
 import { configCompressPlugin } from "./compress";
@@ -69,6 +70,8 @@ export function getPluginsList(
     // 打包分析
     lifecycle === "report"
       ? visualizer({ open: true, brotliSize: true, filename: "report.html" })
-      : null
+      : null,
+    // 支持electron
+    ...electronPlugin
   ];
 }

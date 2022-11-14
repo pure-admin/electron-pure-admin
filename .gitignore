@@ -6,7 +6,6 @@ dist-ssr
 .eslintcache
 report.html
 
-yarn.lock
 yarn-error.log
 npm-debug.log*
 .pnpm-error.log*
@@ -20,3 +19,5 @@ tests/**/coverage/
 *.njsproj
 *.sln
 tsconfig.tsbuildinfo
+
+dist-electron
