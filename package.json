@@ -3,24 +3,23 @@
   "version": "3.6.4",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS=--max-old-space-size=4096 vite",
-    "serve": "pnpm dev",
-    "build": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build",
+    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite",
+    "serve": "yarn dev",
+    "build": "rimraf dist && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "build:staging": "rimraf dist && vite build --mode staging",
     "report": "rimraf dist && vite build",
     "preview": "vite preview",
-    "preview:build": "pnpm build && vite preview",
+    "preview:build": "yarn build && vite preview",
     "typecheck": "tsc --noEmit && vue-tsc --noEmit --skipLibCheck",
-    "cloc": "NODE_OPTIONS=--max-old-space-size=4096 cloc . --exclude-dir=node_modules --exclude-lang=YAML",
-    "clean:cache": "rm -rf node_modules && rm -rf .eslintcache && npm cache clean --force && pnpm install",
+    "cloc": "cross-env NODE_OPTIONS=--max-old-space-size=4096 cloc . --exclude-dir=node_modules --exclude-lang=YAML",
+    "clean:cache": "rm -rf node_modules && rm -rf .eslintcache && npm cache clean --force && yarn install",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,css,scss,postcss,less}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
     "lint:pretty": "pretty-quick --staged",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
-    "prepare": "husky install",
-    "preinstall": "npx only-allow pnpm"
+    "lint": "yarn lint:eslint && yarn lint:prettier && yarn lint:stylelint",
+    "prepare": "husky install"
   },
   "browserslist": [
     "> 1%",
@@ -85,6 +84,7 @@
     "@vue/runtime-core": "^3.2.44",
     "autoprefixer": "^10.4.13",
     "cloc": "^2.10.0",
+    "cross-env": "^7.0.3",
     "cssnano": "^5.1.14",
     "eslint": "^8.8.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -121,14 +121,6 @@
     "vite-svg-loader": "^3.6.0",
     "vue-eslint-parser": "^9.1.0",
     "vue-tsc": "^1.0.9"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "rollup",
-        "webpack"
-      ]
-    }
   },
   "repository": "git@github.com:xiaoxian521/pure-admin-thin.git",
   "author": "xiaoxian521",
