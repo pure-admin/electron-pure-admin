@@ -1,13 +1,14 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import { cloneDeep } from "lodash-unified";
 import SearchResult from "./SearchResult.vue";
 import SearchFooter from "./SearchFooter.vue";
+import { deleteChildren } from "@/utils/tree";
 import { useNav } from "@/layout/hooks/useNav";
-import { deleteChildren } from "@pureadmin/utils";
 import { useDebounceFn, onKeyStroke } from "@vueuse/core";
 import { ref, watch, computed, nextTick, shallowRef } from "vue";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import Search from "@iconify-icons/ep/search";
 
 interface Props {
   /** 弹窗显隐 */
@@ -147,7 +148,7 @@ onKeyStroke("ArrowDown", handleDown);
     >
       <template #prefix>
         <span class="el-input__icon">
-          <IconifyIconOffline icon="search" />
+          <IconifyIconOffline :icon="Search" />
         </span>
       </template>
     </el-input>

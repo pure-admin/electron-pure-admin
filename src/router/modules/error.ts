@@ -1,10 +1,10 @@
-import type { RouteConfigsTable } from "/#/index";
+import InformationLine from "@iconify-icons/ri/information-line";
 
-const errorRouter: RouteConfigsTable = {
+export default {
   path: "/error",
   redirect: "/error/403",
   meta: {
-    icon: "information-line",
+    icon: InformationLine,
     title: "异常页面",
     rank: 9
   },
@@ -34,6 +34,4 @@ const errorRouter: RouteConfigsTable = {
       }
     }
   ]
-};
-
-export default errorRouter;
+} as RouteConfigsTable;

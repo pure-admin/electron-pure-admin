@@ -1,13 +1,13 @@
-import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
+import HomeFilled from "@iconify-icons/ep/home-filled";
 
-const homeRouter: RouteConfigsTable = {
+export default {
   path: "/",
   name: "Home",
   component: Layout,
   redirect: "/welcome",
   meta: {
-    icon: "home-filled",
+    icon: HomeFilled,
     title: "首页",
     rank: 0
   },
@@ -21,6 +21,4 @@ const homeRouter: RouteConfigsTable = {
       }
     }
   ]
-};
-
-export default homeRouter;
+} as RouteConfigsTable;

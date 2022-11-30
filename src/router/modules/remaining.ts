@@ -1,7 +1,7 @@
-import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
+import HomeFilled from "@iconify-icons/ep/home-filled";
 
-const remainingRouter: Array<RouteConfigsTable> = [
+export default [
   {
     path: "/login",
     name: "Login",
@@ -16,7 +16,7 @@ const remainingRouter: Array<RouteConfigsTable> = [
     path: "/redirect",
     component: Layout,
     meta: {
-      icon: "home-filled",
+      icon: HomeFilled,
       title: "首页",
       showLink: false,
       rank: 104
@@ -29,6 +29,4 @@ const remainingRouter: Array<RouteConfigsTable> = [
       }
     ]
   }
-];
-
-export default remainingRouter;
+] as Array<RouteConfigsTable>;

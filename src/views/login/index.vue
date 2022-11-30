@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Motion from "./utils/motion";
 import { useRouter } from "vue-router";
+import { message } from "@/utils/message";
 import { loginRules } from "./utils/rule";
 import { initRouter } from "@/router/utils";
 import { useNav } from "@/layout/hooks/useNav";
-import { message } from "@pureadmin/components";
 import type { FormInstance } from "element-plus";
 import { useLayout } from "@/layout/hooks/useLayout";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -15,6 +15,8 @@ import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
+import Lock from "@iconify-icons/ri/lock-fill";
+import User from "@iconify-icons/ri/user-3-fill";
 
 defineOptions({
   name: "Login"
@@ -46,8 +48,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           if (res.success) {
             // 获取后端路由
             initRouter().then(() => {
-              message.success("登录成功");
               router.push("/");
+              message("登录成功", { type: "success" });
             });
           }
         });
@@ -119,7 +121,7 @@ onBeforeUnmount(() => {
                   clearable
                   v-model="ruleForm.username"
                   placeholder="账号"
-                  :prefix-icon="useRenderIcon('user')"
+                  :prefix-icon="useRenderIcon(User)"
                 />
               </el-form-item>
             </Motion>
@@ -131,7 +133,7 @@ onBeforeUnmount(() => {
                   show-password
                   v-model="ruleForm.password"
                   placeholder="密码"
-                  :prefix-icon="useRenderIcon('lock')"
+                  :prefix-icon="useRenderIcon(Lock)"
                 />
               </el-form-item>
             </Motion>
