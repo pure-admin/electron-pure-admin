@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useDark } from "@pureadmin/utils";
+import { ref, computed } from "vue";
+import { useNav } from "@/layout/hooks/useNav";
 import MenuFold from "@iconify-icons/ri/menu-fold-fill";
-import MenuUnfold from "@iconify-icons/ri/menu-unfold-fill";
 
 interface Props {
   isActive: boolean;
@@ -10,7 +10,25 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   isActive: false
 });
-const { isDark } = useDark();
+
+const visible = ref(false);
+const { tooltipEffect } = useNav();
+
+const iconClass = computed(() => {
+  return [
+    "ml-4",
+    "mb-1",
+    "w-[16px]",
+    "h-[16px]",
+    "inline-block",
+    "align-middle",
+    "text-primary",
+    "cursor-pointer",
+    "duration-[360ms]",
+    "hover:text-primary",
+    "dark:hover:!text-white"
+  ];
+});
 
 const emit = defineEmits<{
   (e: "toggleClick"): void;
@@ -25,13 +43,17 @@ const toggleClick = () => {
   <div class="container">
     <el-tooltip
       placement="right"
-      :effect="isDark ? 'dark' : 'light'"
+      :visible="visible"
+      :effect="tooltipEffect"
       :content="props.isActive ? '点击折叠' : '点击展开'"
     >
       <IconifyIconOffline
-        :icon="props.isActive ? MenuFold : MenuUnfold"
-        class="cursor-pointer inline-block align-middle text-primary hover:text-primary dark:hover:!text-white w-[16px] h-[16px] ml-4 mb-1"
+        :icon="MenuFold"
+        :class="iconClass"
+        :style="{ transform: props.isActive ? 'none' : 'rotateY(180deg)' }"
         @click="toggleClick"
+        @mouseenter="visible = true"
+        @mouseleave="visible = false"
       />
     </el-tooltip>
   </div>

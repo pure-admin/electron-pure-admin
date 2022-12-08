@@ -6,7 +6,6 @@ import type {
 } from "vue";
 import type { ECharts } from "echarts";
 import type { IconifyIcon } from "@iconify/vue";
-import type { ResponsiveStorage } from "./index";
 import type { TableColumns } from "@pureadmin/table";
 import { type RouteComponent, type RouteLocationNormalized } from "vue-router";
 
@@ -95,14 +94,8 @@ declare global {
     ShowLogo?: boolean;
     ShowModel?: string;
     MenuArrowIconNoTransition?: boolean;
-    MapConfigure?: {
-      amapKey?: string;
-      options: {
-        resizeEnable?: boolean;
-        center?: number[];
-        zoom?: number;
-      };
-    };
+    CachingAsyncRoutes?: boolean;
+    TooltipEffect?: Effect;
   }
 
   /**
@@ -127,14 +120,6 @@ declare global {
     epThemeColor?: string;
     showLogo?: boolean;
     showModel?: string;
-    mapConfigure?: {
-      amapKey?: string;
-      options: {
-        resizeEnable?: boolean;
-        center?: number[];
-        zoom?: number;
-      };
-    };
     username?: string;
   }
 
