@@ -1,7 +1,6 @@
 // import "@/utils/sso";
 import { getConfig } from "@/config";
 import NProgress from "@/utils/progress";
-import { findIndex } from "lodash-unified";
 import { sessionKey, type DataInfo } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
@@ -61,7 +60,7 @@ export const remainingPaths = Object.keys(remainingRouter).map(v => {
 
 /** 创建路由实例 */
 export const router: Router = createRouter({
-  history: getHistoryMode(),
+  history: getHistoryMode(import.meta.env.VITE_ROUTER_HISTORY),
   routes: constantRoutes.concat(...(remainingRouter as any)),
   strict: true,
   scrollBehavior(to, from, savedPosition) {
@@ -105,7 +104,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
       handleAliveRoute(newMatched);
     }
   }
-  const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey);
+  const userInfo = storageSession().getItem<DataInfo<number>>(sessionKey);
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
@@ -142,14 +141,10 @@ router.beforeEach((to: toRouteType, _from, next) => {
         initRouter().then((router: Router) => {
           if (!useMultiTagsStoreHook().getMultiTagsCache) {
             const { path } = to;
-            const index = findIndex(remainingRouter, v => {
-              return v.path == path;
-            });
-            const routes: any =
-              index === -1
-                ? router.options.routes[0].children
-                : router.options.routes;
-            const route = findRouteByPath(path, routes);
+            const route = findRouteByPath(
+              path,
+              router.options.routes[0].children
+            );
             // query、params模式路由传参数的标签页不在此处处理
             if (route && route.meta?.title) {
               useMultiTagsStoreHook().handleTags("push", {

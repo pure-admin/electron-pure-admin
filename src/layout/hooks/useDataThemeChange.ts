@@ -1,9 +1,7 @@
 import { ref } from "vue";
 import { getConfig } from "@/config";
-import { find } from "lodash-unified";
 import { useLayout } from "./useLayout";
 import { themeColorsType } from "../types";
-import { TinyColor } from "@ctrl/tinycolor";
 import { useGlobal } from "@pureadmin/utils";
 import { useEpThemeStoreHook } from "@/store/modules/epTheme";
 import {
@@ -40,7 +38,7 @@ export function useDataThemeChange() {
   const body = document.documentElement as HTMLElement;
 
   /** 设置导航主题色 */
-  function setLayoutThemeColor(theme = "default") {
+  function setLayoutThemeColor(theme = getConfig().Theme ?? "default") {
     layoutTheme.value.theme = theme;
     toggleTheme({
       scopeName: `layout-theme-${theme}`
@@ -56,35 +54,27 @@ export function useDataThemeChange() {
     if (theme === "default" || theme === "light") {
       setEpThemeColor(getConfig().EpThemeColor);
     } else {
-      const colors = find(themeColors.value, { themeColor: theme });
+      const colors = themeColors.value.find(v => v.themeColor === theme);
       setEpThemeColor(colors.color);
     }
   }
 
-  /**
-   * @description 自动计算hover和active颜色
-   * @see {@link https://element-plus.org/zh-CN/component/button.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%A2%9C%E8%89%B2}
-   */
-  const shadeBgColor = (color: string): string => {
-    return new TinyColor(color).shade(10).toString();
-  };
+  function setPropertyPrimary(mode: string, i: number, color: string) {
+    document.documentElement.style.setProperty(
+      `--el-color-primary-${mode}-${i}`,
+      dataTheme.value ? darken(color, i / 10) : lighten(color, i / 10)
+    );
+  }
 
   /** 设置 `element-plus` 主题色 */
   const setEpThemeColor = (color: string) => {
     useEpThemeStoreHook().setEpThemeColor(color);
-    body.style.setProperty("--el-color-primary-active", shadeBgColor(color));
     document.documentElement.style.setProperty("--el-color-primary", color);
-    for (let i = 1; i <= 9; i++) {
-      document.documentElement.style.setProperty(
-        `--el-color-primary-light-${i}`,
-        lighten(color, i / 10)
-      );
-    }
     for (let i = 1; i <= 2; i++) {
-      document.documentElement.style.setProperty(
-        `--el-color-primary-dark-${i}`,
-        darken(color, i / 10)
-      );
+      setPropertyPrimary("dark", i, color);
+    }
+    for (let i = 1; i <= 9; i++) {
+      setPropertyPrimary("light", i, color);
     }
   };
 

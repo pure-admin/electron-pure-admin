@@ -3,7 +3,7 @@ import { emitter } from "@/utils/mitt";
 import { RouteConfigs } from "../../types";
 import { useTags } from "../../hooks/useTag";
 import { routerArrays } from "@/layout/types";
-import { isEqual, isEmpty } from "lodash-unified";
+import { isEqual, isAllEmpty } from "@pureadmin/utils";
 import { useSettingStoreHook } from "@/store/modules/settings";
 import { ref, watch, unref, nextTick, onBeforeMount } from "vue";
 import { handleAliveRoute, delAliveRoutes } from "@/router/utils";
@@ -63,7 +63,7 @@ const dynamicTagView = () => {
   moveToView(index);
 };
 
-const moveToView = (index: number): void => {
+const moveToView = async (index: number): Promise<void> => {
   const tabNavPadding = 10;
   if (!instance.refs["dynamic" + index]) return;
   const tabItemEl = instance.refs["dynamic" + index][0];
@@ -73,8 +73,13 @@ const moveToView = (index: number): void => {
   const scrollbarDomWidth = scrollbarDom.value
     ? scrollbarDom.value?.offsetWidth
     : 0;
+
+  // 获取视图更新后dom
+  await nextTick();
+
   // 已有标签页总长度（包含溢出部分）
   const tabDomWidth = tabDom.value ? tabDom.value?.offsetWidth : 0;
+
   scrollbarDomWidth <= tabDomWidth
     ? (isShowArrow.value = true)
     : (isShowArrow.value = false);
@@ -192,6 +197,7 @@ function deleteDynamicTag(obj: any, current: any, tag?: string) {
         length
       }) as any;
     }
+    dynamicTagView();
   };
 
   if (tag === "other") {
@@ -347,7 +353,7 @@ function showMenuModel(
   const allRoute = multiTags.value;
   const routeLength = multiTags.value.length;
   let currentIndex = -1;
-  if (isEmpty(query)) {
+  if (isAllEmpty(query)) {
     currentIndex = allRoute.findIndex(v => v.path === currentPath);
   } else {
     currentIndex = allRoute.findIndex(v => isEqual(v.query, query));
@@ -486,6 +492,11 @@ onBeforeMount(() => {
 watch([route], () => {
   activeIndex.value = -1;
   dynamicTagView();
+});
+
+watch(isFullscreen, () => {
+  tagsViews[6].icon = Fullscreen;
+  tagsViews[6].text = "全屏";
 });
 
 onMounted(() => {
