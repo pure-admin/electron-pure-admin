@@ -21,3 +21,4 @@ tests/**/coverage/
 tsconfig.tsbuildinfo
 
 dist-electron
+release
