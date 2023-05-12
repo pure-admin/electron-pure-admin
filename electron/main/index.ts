@@ -1,3 +1,7 @@
+import { app, BrowserWindow, shell, ipcMain } from "electron";
+import { release } from "node:os";
+import { join } from "node:path";
+
 // The built directory structure
 //
 // ├─┬ dist-electron
@@ -10,13 +14,9 @@
 //
 process.env.DIST_ELECTRON = join(__dirname, "..");
 process.env.DIST = join(process.env.DIST_ELECTRON, "../dist");
-process.env.PUBLIC = app.isPackaged
-  ? process.env.DIST
-  : join(process.env.DIST_ELECTRON, "../public");
-
-import { app, BrowserWindow, shell, ipcMain } from "electron";
-import { release } from "os";
-import { join } from "path";
+process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
+  ? join(process.env.DIST_ELECTRON, "../public")
+  : process.env.DIST;
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -73,6 +73,7 @@ async function createWindow() {
     if (url.startsWith("https:")) shell.openExternal(url);
     return { action: "deny" };
   });
+  // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 
 app.whenReady().then(createWindow);
@@ -99,8 +100,8 @@ app.on("activate", () => {
   }
 });
 
-// new window example arg: new windows url
-ipcMain.handle("open-win", (event, arg) => {
+// New window example arg: new windows url
+ipcMain.handle("open-win", (_, arg) => {
   const childWindow = new BrowserWindow({
     webPreferences: {
       preload,
@@ -109,10 +110,9 @@ ipcMain.handle("open-win", (event, arg) => {
     }
   });
 
-  if (app.isPackaged) {
-    childWindow.loadFile(indexHtml, { hash: arg });
-  } else {
+  if (process.env.VITE_DEV_SERVER_URL) {
     childWindow.loadURL(`${url}#${arg}`);
-    // childWindow.webContents.openDevTools({ mode: "undocked", activate: true })
+  } else {
+    childWindow.loadFile(indexHtml, { hash: arg });
   }
 });

@@ -53,5 +53,7 @@ getServerConfig(app).then(async config => {
   // .use(useEcharts);
   // .use(Table);
   // .use(PureDescriptions);
-  app.mount("#app");
+  app.mount("#app").$nextTick(() => {
+    postMessage({ payload: "removeLoading" }, "*");
+  });
 });

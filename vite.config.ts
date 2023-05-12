@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { resolve } from "path";
+import { rmSync } from "node:fs";
 import pkg from "./package.json";
 import { warpperEnv } from "./build";
 import { getPluginsList } from "./build/plugins";
@@ -27,6 +28,7 @@ const __APP_INFO__ = {
 };
 
 export default ({ command, mode }: ConfigEnv): UserConfigExport => {
+  rmSync("dist-electron", { recursive: true, force: true });
   const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
     warpperEnv(loadEnv(mode, root));
   return {

@@ -24,3 +24,15 @@
 1. [Replace pnpm with yarn, yarn is more friendly to electron support](https://github.com/xiaoxian521/electron-pure-admin/commit/1a036a270cc5792ff6f12070dbf3ac92b8138268)
 
 2. [Add electron support](https://github.com/xiaoxian521/electron-pure-admin/commit/12fbf65ff95757ce444769ac6c3e65265595973d)
+
+### FAQ
+
+1. `yarn` is stuck when installing `electron`, just execute the following command to solve it
+
+```sh
+yarn config set electron_mirror https://npmmirror.com/mirrors/electron/
+```
+
+2. After packaging and installing, the page is always loading
+
+`VITE_PUBLIC_PATH` packaging path environment variable needs to be configured as `./`

@@ -24,3 +24,15 @@
 1. [将 pnpm 更换成 yarn，yarn 对 electron 支持更友好](https://github.com/xiaoxian521/electron-pure-admin/commit/1a036a270cc5792ff6f12070dbf3ac92b8138268)
 
 2. [添加 electron 支持](https://github.com/xiaoxian521/electron-pure-admin/commit/12fbf65ff95757ce444769ac6c3e65265595973d)
+
+### 常见问题
+
+1. `yarn` 安装 `electron` 时卡住，只需要执行下面命令即可解决
+
+```sh
+yarn config set electron_mirror https://npmmirror.com/mirrors/electron/
+```
+
+2. 打包安装后页面一直处在加载状态
+
+`VITE_PUBLIC_PATH` 打包路径环境变量需要配置为 `./`
