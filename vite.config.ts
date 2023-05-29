@@ -28,7 +28,10 @@ const __APP_INFO__ = {
 };
 
 export default ({ command, mode }: ConfigEnv): UserConfigExport => {
-  rmSync("dist-electron", { recursive: true, force: true });
+  const lifecycle = process.env.npm_lifecycle_event;
+  if (!lifecycle.includes("browser")) {
+    rmSync("dist-electron", { recursive: true, force: true });
+  }
   const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
     warpperEnv(loadEnv(mode, root));
   return {

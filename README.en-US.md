@@ -7,23 +7,35 @@
 
 ### Install dependencies
 
-- `yarn install`
+```sh
+yarn install
+```
 
 ### Start up
 
-- `yarn dev`
+```sh
+# Desktop
+yarn dev
+```
+
+```sh
+# Browser
+yarn browser:dev
+```
 
 ### Build
 
-- `yarn build`
+```sh
+# Desktop
+yarn build
+```
+
+```sh
+# Browser
+yarn browser:build
+```
 
 `yarn` is more friendly to `electron` support
-
-### How to build `pure-admin` full version or other version into `electron` version, just refer to the following two steps
-
-1. [Replace pnpm with yarn, yarn is more friendly to electron support](https://github.com/xiaoxian521/electron-pure-admin/commit/1a036a270cc5792ff6f12070dbf3ac92b8138268)
-
-2. [Add electron support](https://github.com/xiaoxian521/electron-pure-admin/commit/12fbf65ff95757ce444769ac6c3e65265595973d)
 
 ### FAQ
 

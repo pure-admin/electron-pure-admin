@@ -7,23 +7,35 @@
 
 ### 安装依赖
 
-- `yarn install`
+```sh
+yarn install
+```
 
 ### 启动
 
-- `yarn dev`
+```sh
+# 桌面端
+yarn dev
+```
+
+```sh
+# 浏览器端
+yarn browser:dev
+```
 
 ### 打包
 
-- `yarn build`
+```sh
+# 桌面端
+yarn build
+```
+
+```sh
+# 浏览器端
+yarn browser:build
+```
 
 `yarn` 对 `electron` 支持更友好
-
-### 如何将 `pure-admin` 完整版或其他版本构建成 `electron` 版本，只需要参考下面两个步骤即可
-
-1. [将 pnpm 更换成 yarn，yarn 对 electron 支持更友好](https://github.com/xiaoxian521/electron-pure-admin/commit/1a036a270cc5792ff6f12070dbf3ac92b8138268)
-
-2. [添加 electron 支持](https://github.com/xiaoxian521/electron-pure-admin/commit/12fbf65ff95757ce444769ac6c3e65265595973d)
 
 ### 常见问题
 
