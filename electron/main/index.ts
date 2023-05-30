@@ -1,6 +1,14 @@
-import { app, BrowserWindow, shell, ipcMain } from "electron";
-import { release } from "node:os";
 import { join } from "node:path";
+import { release } from "node:os";
+import {
+  type MenuItem,
+  type MenuItemConstructorOptions,
+  app,
+  Menu,
+  shell,
+  ipcMain,
+  BrowserWindow
+} from "electron";
 
 // The built directory structure
 //
@@ -17,6 +25,8 @@ process.env.DIST = join(process.env.DIST_ELECTRON, "../dist");
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, "../public")
   : process.env.DIST;
+// 是否为开发环境
+const isDev = process.env["NODE_ENV"] === "development";
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -40,8 +50,20 @@ const preload = join(__dirname, "../preload/index.js");
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, "index.html");
 
+// 创建菜单
+function createMenu(label = "进入全屏幕") {
+  const menu = Menu.buildFromTemplate(
+    appMenu(label) as (MenuItemConstructorOptions | MenuItem)[]
+  );
+  Menu.setApplicationMenu(menu);
+}
+
 async function createWindow() {
   win = new BrowserWindow({
+    width: 1024,
+    height: 768,
+    minWidth: 1024,
+    minHeight: 768,
     title: "Main window",
     icon: join(process.env.PUBLIC, "favicon.ico"),
     webPreferences: {
@@ -58,10 +80,12 @@ async function createWindow() {
     // electron-vite-vue#298
     win.loadURL(url);
     // Open devTool if the app is not packaged
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   } else {
     win.loadFile(indexHtml);
   }
+
+  createMenu();
 
   // Test actively push message to the Electron-Renderer
   win.webContents.on("did-finish-load", () => {
@@ -74,6 +98,16 @@ async function createWindow() {
     return { action: "deny" };
   });
   // win.webContents.on('will-navigate', (event, url) => { }) #344
+
+  // 窗口进入全屏状态时触发
+  win.on("enter-full-screen", () => {
+    createMenu("退出全屏幕");
+  });
+
+  // 窗口离开全屏状态时触发
+  win.on("leave-full-screen", () => {
+    createMenu();
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -99,6 +133,57 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+// 菜单栏 https://www.electronjs.org/zh/docs/latest/api/menu-item#%E8%8F%9C%E5%8D%95%E9%A1%B9
+const appMenu = (fullscreenLabel: string) => {
+  const menuItems = [
+    { label: "关于", role: "about" },
+    { label: "开发者工具", role: "toggleDevTools" },
+    { label: "强制刷新", role: "forcereload" },
+    { label: "退出", role: "quit" }
+  ];
+  // 生产环境删除开发者工具菜单
+  if (!isDev) menuItems.splice(1, 1);
+  const template = [
+    {
+      label: app.name,
+      submenu: menuItems
+    },
+    {
+      label: "编辑",
+      submenu: [
+        { label: "撤销", role: "undo" },
+        {
+          label: "重做",
+          role: "redo"
+        },
+        { type: "separator" },
+        { label: "剪切", role: "cut" },
+        { label: "复制", role: "copy" },
+        { label: "粘贴", role: "paste" },
+        { label: "删除", role: "delete" },
+        { label: "全选", role: "selectAll" }
+      ]
+    },
+    {
+      label: "显示",
+      submenu: [
+        { label: "加大", role: "zoomin" },
+        {
+          label: "默认大小",
+          role: "resetzoom"
+        },
+        { label: "缩小", role: "zoomout" },
+        { type: "separator" },
+        {
+          label: fullscreenLabel,
+          role: "togglefullscreen"
+        }
+      ]
+    }
+  ];
+  return template;
+};
 
 // New window example arg: new windows url
 ipcMain.handle("open-win", (_, arg) => {
