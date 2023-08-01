@@ -1,0 +1,31 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Yarn setup
+        uses: DerYeger/yarn-setup-action@master
+        with:
+          node-version: 16
+
+      - name: Build and release
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 15
+          max_attempts: 2
+          retry_wait_seconds: 15
+          retry_on: error
+          shell: "bash"
+          command: yarn build --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

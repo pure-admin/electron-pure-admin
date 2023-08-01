@@ -1,13 +1,15 @@
 {
   "name": "electron-pure-admin",
   "version": "4.1.0",
+  "description": "electron-pure-admin",
   "private": true,
   "main": "dist-electron/main/index.js",
   "scripts": {
     "dev": "vite",
     "serve": "vite",
-    "build": "rimraf dist && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build && electron-builder",
-    "build:staging": "rimraf dist && vite build --mode staging && electron-builder",
+    "icon": "esno build/icon.ts --input=public/icon.png --output=dist",
+    "build": "rimraf dist && rimraf release && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build && yarn icon && electron-builder build --config .electron-builder.config.js",
+    "build:staging": "rimraf dist && rimraf release && vite build --mode staging && yarn icon && electron-builder build --config .electron-builder.config.js",
     "browser:dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite",
     "browser:build": "rimraf dist && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "preview": "vite preview",
@@ -75,6 +77,7 @@
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.3",
+    "args": "^5.0.3",
     "autoprefixer": "^10.4.14",
     "cloc": "^2.11.0",
     "cross-env": "^7.0.3",
@@ -84,7 +87,10 @@
     "eslint": "^8.40.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.12.0",
+    "esno": "^0.17.0",
     "husky": "^8.0.3",
+    "icon-gen": "^3.0.1",
+    "jimp": "^0.22.10",
     "lint-staged": "^13.2.2",
     "picocolors": "^1.0.0",
     "postcss": "^8.4.23",
@@ -123,7 +129,11 @@
     "vue-eslint-parser": "^9.2.1",
     "vue-tsc": "^1.6.4"
   },
-  "repository": "git@github.com:pure-admin/electron-pure-admin.git",
-  "author": "xiaoxian521",
+  "repository": "https://github.com/pure-admin/electron-pure-admin.git",
+  "author": {
+    "email": "822388890@qq.com",
+    "name": "xiaoxian521",
+    "url": "https://github.com/xiaoxian521"
+  },
   "license": "MIT"
 }
