@@ -9,6 +9,8 @@ import {
   ipcMain,
   BrowserWindow
 } from "electron";
+import { spawn } from "child_process";
+import log from "electron-log/src";
 
 // The built directory structure
 //
@@ -39,6 +41,8 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0);
 }
 
+let server = null;
+
 // Remove electron security warnings
 // This warning only shows in development mode
 // Read more on https://www.electronjs.org/docs/latest/tutorial/security
@@ -60,10 +64,10 @@ function createMenu(label = "进入全屏幕") {
 
 async function createWindow() {
   win = new BrowserWindow({
-    width: 1024,
-    height: 768,
-    minWidth: 1024,
-    minHeight: 768,
+    width: 1200,
+    height: 800,
+    minWidth: 1200,
+    minHeight: 800,
     title: "Main window",
     icon: join(process.env.PUBLIC, "favicon.ico"),
     webPreferences: {
@@ -114,7 +118,11 @@ app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
   win = null;
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin") {
+    server.kill();
+    server = null;
+    app.quit();
+  }
 });
 
 app.on("second-instance", () => {
@@ -199,5 +207,21 @@ ipcMain.handle("open-win", (_, arg) => {
     childWindow.loadURL(`${url}#${arg}`);
   } else {
     childWindow.loadFile(indexHtml, { hash: arg });
+  }
+});
+
+const JAR = "Application.jar";
+const JAR_PATH = isDev
+  ? join(app.getAppPath(), "src", "server", JAR)
+  : join(app.getAppPath(), "..", "src", "server", JAR);
+app.whenReady().then(() => {
+  log.info("starting server");
+  log.info(`JAR_PATH: ${JAR_PATH}`);
+  server = spawn("java", ["-jar", JAR_PATH]);
+  if (server.pid) {
+    log.info(`server started with PID: ${server.pid}`);
+  } else {
+    log.error("server failed to start");
+    app.quit();
   }
 });
