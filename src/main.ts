@@ -5,10 +5,9 @@ import ElementPlus from "element-plus";
 import { getServerConfig } from "./config";
 import { createApp, Directive } from "vue";
 import { MotionPlugin } from "@vueuse/motion";
-// import { useEcharts } from "@/plugins/echarts";
+import { useEcharts } from "@/plugins/echarts";
 import { injectResponsiveStorage } from "@/utils/responsive";
-
-// import Table from "@pureadmin/table";
+import Table from "@pureadmin/table";
 // import PureDescriptions from "@pureadmin/descriptions";
 
 // 引入重置样式
@@ -21,7 +20,8 @@ import "element-plus/dist/index.css";
 // 导入字体图标
 import "./assets/iconfont/iconfont.js";
 import "./assets/iconfont/iconfont.css";
-
+// 导入excel展示组件
+import VueExcelEditor from "vue3-excel-editor";
 const app = createApp(App);
 
 // 自定义指令
@@ -49,9 +49,12 @@ getServerConfig(app).then(async config => {
   await router.isReady();
   injectResponsiveStorage(app, config);
   setupStore(app);
-  app.use(MotionPlugin).use(ElementPlus);
-  // .use(useEcharts);
-  // .use(Table);
+  app
+    .use(MotionPlugin)
+    .use(ElementPlus)
+    .use(useEcharts)
+    .use(Table)
+    .use(VueExcelEditor);
   // .use(PureDescriptions);
   app.mount("#app").$nextTick(() => {
     postMessage({ payload: "removeLoading" }, "*");

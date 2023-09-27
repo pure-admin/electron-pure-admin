@@ -10,7 +10,8 @@ import {
   BrowserWindow
 } from "electron";
 import { spawn } from "child_process";
-import log from "electron-log/src";
+import log from "electron-log";
+log.scope("main process");
 
 // The built directory structure
 //
@@ -145,7 +146,7 @@ app.on("activate", () => {
 // 菜单栏 https://www.electronjs.org/zh/docs/latest/api/menu-item#%E8%8F%9C%E5%8D%95%E9%A1%B9
 const appMenu = (fullscreenLabel: string) => {
   const menuItems = [
-    { label: "关于", role: "about" },
+    // { label: "关于", role: "about" },
     { label: "开发者工具", role: "toggleDevTools" },
     { label: "强制刷新", role: "forcereload" },
     { label: "退出", role: "quit" }
@@ -154,7 +155,7 @@ const appMenu = (fullscreenLabel: string) => {
   if (!isDev) menuItems.splice(1, 1);
   const template = [
     {
-      label: app.name,
+      label: "菜单",
       submenu: menuItems
     },
     {
