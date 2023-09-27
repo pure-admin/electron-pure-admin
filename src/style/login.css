@@ -1,34 +1,31 @@
 .wave {
   position: fixed;
   height: 100%;
+  width: 100%;
   left: 0;
   bottom: 0;
   z-index: -1;
+  background-size: cover;
 }
 
 .login-container {
   width: 100vw;
   height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 18rem;
-  padding: 0 2rem;
-}
-
-.img {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-}
-
-.img img {
-  width: 500px;
+  padding: 0 2rem;
 }
 
 .login-box {
   display: flex;
   align-items: center;
   text-align: center;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
 }
 
 .login-form {
@@ -72,14 +69,6 @@
 }
 
 @media screen and (max-width: 968px) {
-  .wave {
-    display: none;
-  }
-
-  .img {
-    display: none;
-  }
-
   .login-container {
     grid-template-columns: 1fr;
   }
