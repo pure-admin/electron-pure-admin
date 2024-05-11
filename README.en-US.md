@@ -1,6 +1,6 @@
 <h1>electron-pure-admin</h1>
 
-**Chinese** | [English](./README.en-US.md)
+**English** | [中文](./README.md)
 
 - [electron-pure-admin](https://github.com/xiaoxian521/electron-pure-admin) is in [pure-admin-thin](https://github.com/xiaoxian521/pure-admin-thin) developed on the basis of
 - Of course, the platform also provides the `tauri` version of [tauri-pure-admin](https://github.com/xiaoxian521/tauri-pure-admin)
