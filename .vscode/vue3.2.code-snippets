@@ -1,14 +1,14 @@
 {
   "Vue3.2+快速生成模板": {
+    "scope": "vue",
     "prefix": "Vue3.2+",
     "body": [
       "<script setup lang='ts'>",
       "</script>\n",
       "<template>",
-      "\t<div>\n",
-      "\t</div>",
+      "\t<div>test</div>",
       "</template>\n",
-      "<style scoped>\n",
+      "<style lang='scss' scoped>\n",
       "</style>",
       "$2"
     ],

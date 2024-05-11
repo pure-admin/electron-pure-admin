@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { isFunction } from "@pureadmin/utils";
 import {
-  type DialogOptions,
-  type ButtonProps,
   type EventType,
-  dialogStore,
-  closeDialog
+  type ButtonProps,
+  type DialogOptions,
+  closeDialog,
+  dialogStore
 } from "./index";
+import { ref, computed } from "vue";
+import { isFunction } from "@pureadmin/utils";
+import Fullscreen from "@iconify-icons/ri/fullscreen-fill";
+import ExitFullscreen from "@iconify-icons/ri/fullscreen-exit-fill";
+
+defineOptions({
+  name: "ReDialog"
+});
+
+const fullscreen = ref(false);
 
 const footerButtons = computed(() => {
   return (options: DialogOptions) => {
@@ -33,6 +41,7 @@ const footerButtons = computed(() => {
             type: "primary",
             text: true,
             bg: true,
+            popconfirm: options?.popconfirm,
             btnClick: ({ dialog: { options, index } }) => {
               const done = () =>
                 closeDialog(options, index, { command: "sure" });
@@ -47,11 +56,23 @@ const footerButtons = computed(() => {
   };
 });
 
+const fullscreenClass = computed(() => {
+  return [
+    "el-icon",
+    "el-dialog__close",
+    "-translate-x-2",
+    "cursor-pointer",
+    "hover:!text-[red]"
+  ];
+});
+
 function eventsCallBack(
   event: EventType,
   options: DialogOptions,
-  index: number
+  index: number,
+  isClickFullScreen = false
 ) {
+  if (!isClickFullScreen) fullscreen.value = options?.fullscreen ?? false;
   if (options?.[event] && isFunction(options?.[event])) {
     return options?.[event]({ options, index });
   }
@@ -73,21 +94,55 @@ function handleClose(
     :key="index"
     v-bind="options"
     v-model="options.visible"
+    class="pure-dialog"
+    :fullscreen="fullscreen ? true : options?.fullscreen ? true : false"
+    @closed="handleClose(options, index)"
     @opened="eventsCallBack('open', options, index)"
-    @close="handleClose(options, index)"
     @openAutoFocus="eventsCallBack('openAutoFocus', options, index)"
     @closeAutoFocus="eventsCallBack('closeAutoFocus', options, index)"
   >
     <!-- header -->
     <template
-      v-if="options?.headerRenderer"
+      v-if="options?.fullscreenIcon || options?.headerRenderer"
       #header="{ close, titleId, titleClass }"
     >
+      <div
+        v-if="options?.fullscreenIcon"
+        class="flex items-center justify-between"
+      >
+        <span :id="titleId" :class="titleClass">{{ options?.title }}</span>
+        <i
+          v-if="!options?.fullscreen"
+          :class="fullscreenClass"
+          @click="
+            () => {
+              fullscreen = !fullscreen;
+              eventsCallBack(
+                'fullscreenCallBack',
+                { ...options, fullscreen },
+                index,
+                true
+              );
+            }
+          "
+        >
+          <IconifyIconOffline
+            class="pure-dialog-svg"
+            :icon="
+              options?.fullscreen
+                ? ExitFullscreen
+                : fullscreen
+                  ? ExitFullscreen
+                  : Fullscreen
+            "
+          />
+        </i>
+      </div>
       <component
         :is="options?.headerRenderer({ close, titleId, titleClass })"
+        v-else
       />
     </template>
-    <!-- default -->
     <component
       v-bind="options?.props"
       :is="options.contentRenderer({ options, index })"
@@ -99,19 +154,34 @@ function handleClose(
         <component :is="options?.footerRenderer({ options, index })" />
       </template>
       <span v-else>
-        <el-button
-          v-for="(btn, key) in footerButtons(options)"
-          :key="key"
-          v-bind="btn"
-          @click="
-            btn.btnClick({
-              dialog: { options, index },
-              button: { btn, index: key }
-            })
-          "
-        >
-          {{ btn?.label }}
-        </el-button>
+        <template v-for="(btn, key) in footerButtons(options)" :key="key">
+          <el-popconfirm
+            v-if="btn.popconfirm"
+            v-bind="btn.popconfirm"
+            @confirm="
+              btn.btnClick({
+                dialog: { options, index },
+                button: { btn, index: key }
+              })
+            "
+          >
+            <template #reference>
+              <el-button v-bind="btn">{{ btn?.label }}</el-button>
+            </template>
+          </el-popconfirm>
+          <el-button
+            v-else
+            v-bind="btn"
+            @click="
+              btn.btnClick({
+                dialog: { options, index },
+                button: { btn, index: key }
+              })
+            "
+          >
+            {{ btn?.label }}
+          </el-button>
+        </template>
       </span>
     </template>
   </el-dialog>

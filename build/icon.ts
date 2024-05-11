@@ -1,8 +1,8 @@
-import fs from "fs";
 import Jimp from "jimp";
 import args from "args";
-import path from "path";
 import icongen from "icon-gen";
+import { resolve, join } from "node:path";
+import { renameSync, existsSync, mkdirSync } from "node:fs";
 
 const pngSizes = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
 
@@ -14,14 +14,14 @@ args
 const flags = args.parse(process.argv);
 
 // correct paths
-const input = path.resolve(process.cwd(), flags.input);
-const output = path.resolve(process.cwd(), flags.output);
+const input = resolve(process.cwd(), flags.input);
+const output = resolve(process.cwd(), flags.output);
 const flatten = flags.flatten;
 const o = output;
-const oSub = path.join(o, "icons/");
-const PNGoutputDir = flatten ? oSub : path.join(oSub, "png");
-const macOutputDir = flatten ? oSub : path.join(oSub, "mac");
-const winOutputDir = flatten ? oSub : path.join(oSub, "win");
+const oSub = join(o, "icons/");
+const PNGoutputDir = flatten ? oSub : join(oSub, "png");
+const macOutputDir = flatten ? oSub : join(oSub, "mac");
+const winOutputDir = flatten ? oSub : join(oSub, "win");
 
 createPNGs(0).catch(err => {
   console.log(err);
@@ -58,10 +58,7 @@ async function createPNGs(position) {
 async function renamePNGs(position) {
   const startName = pngSizes[position] + ".png";
   const endName = pngSizes[position] + "x" + pngSizes[position] + ".png";
-  fs.renameSync(
-    path.join(PNGoutputDir, startName),
-    path.join(PNGoutputDir, endName)
-  );
+  renameSync(join(PNGoutputDir, startName), join(PNGoutputDir, endName));
   console.log("Renamed " + startName + " to " + endName);
 
   if (position < pngSizes.length - 1) {
@@ -84,13 +81,13 @@ async function createPNG(size) {
 
   const image = await Jimp.read(input);
   image.resize(size, size);
-  await image.writeAsync(path.join(PNGoutputDir, fileName));
+  await image.writeAsync(join(PNGoutputDir, fileName));
 
-  return "Created " + path.join(PNGoutputDir, fileName);
+  return "Created " + join(PNGoutputDir, fileName);
 }
 
 function ensureDirExists(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+  if (!existsSync(dir)) {
+    mkdirSync(dir);
   }
 }

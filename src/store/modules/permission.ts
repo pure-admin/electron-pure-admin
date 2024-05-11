@@ -1,10 +1,16 @@
 import { defineStore } from "pinia";
-import { store } from "@/store";
-import { cacheType } from "./types";
-import { constantMenus } from "@/router";
-import { getKeyList } from "@pureadmin/utils";
+import {
+  type cacheType,
+  store,
+  debounce,
+  ascending,
+  getKeyList,
+  filterTree,
+  constantMenus,
+  filterNoPermissionTree,
+  formatFlatteningRoutes
+} from "../utils";
 import { useMultiTagsStoreHook } from "./multiTags";
-import { ascending, filterTree, filterNoPermissionTree } from "@/router/utils";
 
 export const usePermissionStore = defineStore({
   id: "pure-permission",
@@ -13,6 +19,8 @@ export const usePermissionStore = defineStore({
     constantMenus,
     // 整体路由生成的菜单（静态、动态）
     wholeMenus: [],
+    // 整体路由（一维数组格式）
+    flatteningRoutes: [],
     // 缓存页面keepAlive
     cachePageList: []
   }),
@@ -21,6 +29,9 @@ export const usePermissionStore = defineStore({
     handleWholeMenus(routes: any[]) {
       this.wholeMenus = filterNoPermissionTree(
         filterTree(ascending(this.constantMenus.concat(routes)))
+      );
+      this.flatteningRoutes = formatFlatteningRoutes(
+        this.constantMenus.concat(routes)
       );
     },
     cacheOperate({ mode, name }: cacheType) {
@@ -37,7 +48,7 @@ export const usePermissionStore = defineStore({
           break;
       }
       /** 监听缓存页面是否存在于标签页，不存在则删除 */
-      (() => {
+      debounce(() => {
         let cacheLength = this.cachePageList.length;
         const nameList = getKeyList(useMultiTagsStoreHook().multiTags, "name");
         while (cacheLength > 0) {

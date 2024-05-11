@@ -6,10 +6,9 @@ export const routerArrays: Array<RouteConfigs> =
     ? [
         {
           path: "/welcome",
-          parentPath: "/",
           meta: {
             title: "首页",
-            icon: "homeFilled"
+            icon: "ep:home-filled"
           }
         }
       ]
@@ -25,7 +24,6 @@ export type routeMetaType = {
 
 export type RouteConfigs = {
   path?: string;
-  parentPath?: string;
   query?: object;
   params?: object;
   meta?: routeMetaType;
@@ -64,6 +62,7 @@ export interface setType {
 
 export type menuType = {
   id?: number;
+  name?: string;
   path?: string;
   noShowingChildren?: boolean;
   children?: menuType[];
