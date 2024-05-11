@@ -5,9 +5,9 @@
 - [electron-pure-admin](https://github.com/xiaoxian521/electron-pure-admin) is in [pure-admin-thin](https://github.com/xiaoxian521/pure-admin-thin) developed on the basis of
 - Of course, the platform also provides the `tauri` version of [tauri-pure-admin](https://github.com/xiaoxian521/tauri-pure-admin)
 
-![electron1](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd770a71ea1e4e21b4eeef035f231889~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-![electron2](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4eda386db264053964889c4d5fdf320~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-![electron3](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/429a5946093549f1ab9fc68ab035ed06~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
+![electron1](https://xiaoxian521.github.io/hyperlink/img/electron-pure-admin/1.jpg)
+![electron2](https://xiaoxian521.github.io/hyperlink/img/electron-pure-admin/2.jpg)
+![electron3](https://xiaoxian521.github.io/hyperlink/img/electron-pure-admin/3.jpg)
 
 ### Install dependencies
 
