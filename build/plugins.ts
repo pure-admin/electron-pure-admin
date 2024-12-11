@@ -1,20 +1,15 @@
 import { cdn } from "./cdn";
 import vue from "@vitejs/plugin-vue";
-import { pathResolve } from "./utils";
 import { viteBuildInfo } from "./info";
 import svgLoader from "vite-svg-loader";
 import type { PluginOption } from "vite";
-import checker from "vite-plugin-checker";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import electron from "vite-plugin-electron";
-import Inspector from "vite-plugin-vue-inspector";
 import { configCompressPlugin } from "./compress";
+import electron from "vite-plugin-electron/simple";
 import removeNoMatch from "vite-plugin-router-warn";
-import renderer from "vite-plugin-electron-renderer";
 import { visualizer } from "rollup-plugin-visualizer";
 import removeConsole from "vite-plugin-remove-console";
-import { themePreprocessorPlugin } from "@pureadmin/theme";
-import { genScssMultipleScopeVars } from "../src/layout/theme";
+import { codeInspectorPlugin } from "code-inspector-plugin";
 import { vitePluginFakeServer } from "vite-plugin-fake-server";
 import pkg from "../package.json";
 
@@ -32,18 +27,16 @@ export function getPluginsList(
     vue(),
     // jsx、tsx语法支持
     vueJsx(),
-    checker({
-      typescript: true,
-      vueTsc: true,
-      eslint: {
-        lintCommand: `eslint ${pathResolve("../{src,mock,build}/**/*.{vue,js,ts,tsx}")}`,
-        useFlatConfig: true
-      },
-      terminal: false,
-      enableBuild: false
+    /**
+     * 在页面上按住组合键时，鼠标在页面移动即会在 DOM 上出现遮罩层并显示相关信息，点击一下将自动打开 IDE 并将光标定位到元素对应的代码位置
+     * Mac 默认组合键 Option + Shift
+     * Windows 默认组合键 Alt + Shift
+     * 更多用法看 https://inspector.fe-dev.cn/guide/start.html
+     */
+    codeInspectorPlugin({
+      bundler: "vite",
+      hideConsole: true
     }),
-    // 按下Command(⌘)+Shift(⇧)，然后点击页面元素会自动打开本地IDE并跳转到对应的代码位置
-    Inspector(),
     viteBuildInfo(),
     /**
      * 开发环境下移除非必要的vue-router动态路由警告No match found for location with path
@@ -58,13 +51,6 @@ export function getPluginsList(
       infixName: false,
       enableProd: command !== "serve" && prodMock
     }),
-    // 自定义主题
-    themePreprocessorPlugin({
-      scss: {
-        multipleScopeVars: genScssMultipleScopeVars(),
-        extract: true
-      }
-    }),
     // svg组件化支持
     svgLoader(),
     VITE_CDN ? cdn : null,
@@ -78,17 +64,17 @@ export function getPluginsList(
     !lifecycle.includes("browser")
       ? [
           // 支持electron
-          electron([
-            {
-              // Main-Process entry file of the Electron App.
+          electron({
+            main: {
+              // Shortcut of `build.lib.entry`
               entry: "electron/main/index.ts",
-              onstart(options) {
+              onstart({ startup }) {
                 if (process.env.VSCODE_DEBUG) {
                   console.log(
                     /* For `.vscode/.debug.script.mjs` */ "[startup] Electron App"
                   );
                 } else {
-                  options.startup();
+                  startup();
                 }
               },
               vite: {
@@ -104,13 +90,8 @@ export function getPluginsList(
                 }
               }
             },
-            {
-              entry: "electron/preload/index.ts",
-              onstart(options) {
-                // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
-                // instead of restarting the entire Electron App.
-                options.reload();
-              },
+            preload: {
+              input: "electron/preload/index.ts",
               vite: {
                 build: {
                   sourcemap: sourcemap ? "inline" : undefined, // #332
@@ -123,10 +104,12 @@ export function getPluginsList(
                   }
                 }
               }
-            }
-          ]),
-          // Use Node.js API in the Renderer-process
-          renderer()
+            },
+            // Ployfill the Electron and Node.js API for Renderer process.
+            // If you want use Node.js in Renderer process, the `nodeIntegration` needs to be enabled in the Main process.
+            // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
+            renderer: {}
+          })
         ]
       : null
   ];
