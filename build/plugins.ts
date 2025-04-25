@@ -2,8 +2,10 @@ import { cdn } from "./cdn";
 import vue from "@vitejs/plugin-vue";
 import { viteBuildInfo } from "./info";
 import svgLoader from "vite-svg-loader";
+import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
 import vueJsx from "@vitejs/plugin-vue-jsx";
+import tailwindcss from "@tailwindcss/vite";
 import { configCompressPlugin } from "./compress";
 import electron from "vite-plugin-electron/simple";
 import removeNoMatch from "vite-plugin-router-warn";
@@ -24,6 +26,7 @@ export function getPluginsList(
   const lifecycle = process.env.npm_lifecycle_event;
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
   return [
+    tailwindcss(),
     vue(),
     // jsx、tsx语法支持
     vueJsx(),
@@ -53,6 +56,11 @@ export function getPluginsList(
     }),
     // svg组件化支持
     svgLoader(),
+    // 自动按需加载图标
+    Icons({
+      compiler: "vue3",
+      scale: 1
+    }),
     VITE_CDN ? cdn : null,
     configCompressPlugin(VITE_COMPRESSION),
     // 线上环境删除console
