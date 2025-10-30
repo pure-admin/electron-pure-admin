@@ -1,3 +1,7 @@
+# 6.2.0 (2025-10-30)
+
+https://github.com/pure-admin/vue-pure-admin/releases/tag/v6.2.0
+
 # 6.1.0 (2025-08-08)
 
 https://github.com/pure-admin/vue-pure-admin/releases/tag/v6.1.0
